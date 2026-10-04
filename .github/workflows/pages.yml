@@ -56,11 +56,16 @@ jobs:
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          status=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
-            -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds")
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          auth=(-H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json")
+          # Die Build-Anfrage antwortet auch ohne eingeschaltetes Pages mit 201 – deshalb vorher prüfen.
+          if ! curl -s "${auth[@]}" "$api" | grep '"has_pages": *true' > /dev/null; then
+            echo "::warning::GitHub Pages ist noch nicht eingeschaltet. Einmalig: Settings → Pages → Deploy from a branch → gh-pages / (root) → Save."
+            exit 0
+          fi
+          status=$(curl -s -o /dev/null -w '%{http_code}' -X POST "${auth[@]}" "$api/pages/builds")
           if [ "$status" = "201" ]; then
             echo "Pages-Build angefordert: https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
           else
-            echo "::warning::GitHub Pages ist noch nicht eingeschaltet (HTTP $status). Einmalig: Settings → Pages → Deploy from a branch → gh-pages / (root) → Save."
+            echo "::warning::Pages-Build konnte nicht angefordert werden (HTTP $status)."
           fi
