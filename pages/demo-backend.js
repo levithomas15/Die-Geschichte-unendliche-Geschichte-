@@ -7,24 +7,51 @@ const DISCOUNT_CODE = '1589';
 const STORAGE_KEY = 'unendliche-geschichte-vorschau';
 const NOTICE =
   'Vorschau: Hier wird kein Geld berechnet, und alles, was du schreibst, bleibt nur in deinem Browser gespeichert.';
+const NO_STORAGE =
+  'Die Vorschau braucht den Speicher deines Browsers. Bitte erlaube Cookies und Website-Daten für diese Seite.';
 
-let memory = null; // Ersatz, falls localStorage blockiert ist
+const fresh = () => ({
+  version: 1,
+  nextId: 1,
+  stories: [{ id: 1, title: null, finished_at: null }],
+  entries: [],
+  names: [],
+  orders: {},
+});
 
-const fresh = () => ({ nextId: 1, stories: [{ id: 1, title: null, finished_at: null }], entries: [], names: [], orders: {} });
+const isValid = (data) =>
+  data?.version === 1 &&
+  Array.isArray(data.stories) &&
+  Array.isArray(data.entries) &&
+  Array.isArray(data.names) &&
+  typeof data.orders === 'object' &&
+  data.stories.some((story) => !story.finished_at);
 
 function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (saved?.stories?.length) return saved;
+    if (isValid(saved)) return saved;
   } catch {}
-  return memory ?? fresh();
+  return fresh();
 }
 
+// Ohne localStorage ginge jeder Kauf beim Wechsel zur Erfolgsseite verloren – dann lieber gleich ehrlich abbrechen.
 function save(data) {
-  memory = data;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {}
+  } catch {
+    throw new ShopError(NO_STORAGE);
+  }
+}
+
+function storageWorks() {
+  try {
+    localStorage.setItem(`${STORAGE_KEY}-test`, '1');
+    localStorage.removeItem(`${STORAGE_KEY}-test`);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 const newId = () => globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
@@ -47,7 +74,7 @@ function state(data) {
     reserved: { title: false, end: false, deletes: [] },
     names: data.names.map((row) => row.name).reverse().slice(0, 500),
     demo: true,
-    demoNotice: NOTICE,
+    demoNotice: storageWorks() ? NOTICE : `Vorschau: ${NO_STORAGE}`,
     discountPercent: DISCOUNT_PERCENT,
     limits: LIMITS,
     products: Object.entries(PRODUCTS).map(([id, product]) => ({ id, ...product })),

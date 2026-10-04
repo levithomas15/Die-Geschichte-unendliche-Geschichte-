@@ -47,7 +47,7 @@ export function createApp({
   const shop = createShop(db, { discountCode });
   const app = express();
   app.disable('x-powered-by');
-  if (trustProxy) app.set('trust proxy', 1);
+  if (trustProxy) app.set('trust proxy', trustProxy);
 
   app.use((req, res, next) => {
     res.set({

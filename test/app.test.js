@@ -316,3 +316,20 @@ describe('Moderation', () => {
     assert.deepEqual(state.names, []);
   });
 });
+
+describe('hinter einem Proxy', () => {
+  let app;
+  before(async () => (app = await start({ trustProxy: true })));
+  after(() => app.server.close());
+
+  test('verschiedene Besucher teilen sich kein Rate-Limit, auch bei mehreren Proxys', async () => {
+    for (let n = 1; n <= 65; n++) {
+      const res = await app.call(
+        '/api/quote',
+        { product: 'sentence' },
+        { 'x-forwarded-for': `198.51.100.${n}, 104.16.0.1, 10.0.0.7` },
+      );
+      assert.equal(res.status, 200, `Besucher ${n}`);
+    }
+  });
+});

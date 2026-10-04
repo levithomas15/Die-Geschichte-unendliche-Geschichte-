@@ -33,8 +33,9 @@ const app = createApp({
   baseUrl: BASE_URL?.replace(/\/+$/, ''),
   adminPassword: ADMIN_PASSWORD,
   discountCode: DISCOUNT_CODE,
-  // Standard an: Hinter einem Proxy würden sich sonst alle Besucher ein Rate-Limit teilen.
-  trustProxy: TRUST_PROXY !== 'false',
+  // Standard an: Hinter Proxys (Render, Railway, nginx …) würden sich sonst alle Besucher ein Rate-Limit teilen.
+  // TRUST_PROXY=false schaltet das ab, eine Zahl legt fest, wie vielen Proxys vertraut wird.
+  trustProxy: TRUST_PROXY === 'false' ? false : /^\d+$/.test(TRUST_PROXY ?? '') ? Number(TRUST_PROXY) : true,
 });
 
 app.listen(Number(PORT), () => console.log(`Die unendliche Geschichte läuft auf http://localhost:${PORT}`));

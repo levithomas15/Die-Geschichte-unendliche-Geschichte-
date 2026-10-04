@@ -7,6 +7,13 @@ import { fileURLToPath } from 'node:url';
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.resolve(root, process.argv[2] ?? 'dist-pages');
 
+// Der Zielordner wird komplett gelöscht – also nie das Repo selbst oder einen Ordner darin außer dist-pages.
+const inside = path.relative(root, out);
+const insideRepo = !inside.startsWith('..') && !path.isAbsolute(inside);
+if ((insideRepo && !/^dist-pages(\/|$)/.test(inside)) || root.startsWith(out + path.sep)) {
+  throw new Error(`Unsicherer Zielordner: ${out} (erlaubt: dist-pages oder ein Ordner außerhalb des Repos)`);
+}
+
 fs.rmSync(out, { recursive: true, force: true });
 fs.cpSync(path.join(root, 'public'), out, { recursive: true });
 fs.copyFileSync(path.join(root, 'pages', 'demo-backend.js'), path.join(out, 'demo-backend.js'));
