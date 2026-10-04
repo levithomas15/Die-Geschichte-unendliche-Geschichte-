@@ -22,7 +22,7 @@ async function check(attempt = 0) {
 
   let order;
   try {
-    order = await api(`/api/orders/${encodeURIComponent(id)}`);
+    order = await api(`api/orders/${encodeURIComponent(id)}`);
   } catch (err) {
     return show('Keine Bestellung gefunden', err.message);
   }

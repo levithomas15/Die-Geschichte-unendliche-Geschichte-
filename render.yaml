@@ -1,0 +1,30 @@
+# Vorlage für Render (https://render.com): echte Version mit Datenbank und Stripe-Bezahlung.
+# Ein-Klick-Start über den "Deploy to Render"-Knopf in der README.
+services:
+  - type: web
+    name: unendliche-geschichte
+    runtime: node
+    # Der Gratis-Tarif hat keine dauerhafte Festplatte – die Geschichte würde bei jedem Neustart verschwinden.
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/state
+    disk:
+      name: daten
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATA_DIR
+        value: /var/data
+      - key: DISCOUNT_CODE
+        value: "1589"
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

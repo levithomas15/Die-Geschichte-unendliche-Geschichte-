@@ -25,7 +25,7 @@ const activeInput = () => (FIELDS[checkout.product]?.line ? $('text-line') : $('
 
 async function load() {
   try {
-    state = await api('/api/state');
+    state = await api('api/state');
     render();
   } catch (err) {
     showToast(err.message);
@@ -35,6 +35,7 @@ async function load() {
 function render() {
   const { story, stats } = state;
   $('demo-banner').hidden = !state.demo;
+  if (state.demoNotice) $('demo-banner').textContent = state.demoNotice;
   $('volume').textContent = `Band ${story.id}`;
   $('title').textContent = story.title ?? 'Noch ohne Titel';
   $('title').classList.toggle('untitled', !story.title);
@@ -186,7 +187,7 @@ function updatePrice() {
   const id = checkout.product;
   quoteTimer = setTimeout(async () => {
     try {
-      const quote = await api('/api/quote', { product: id, code });
+      const quote = await api('api/quote', { product: id, code });
       if (request !== quoteRequest) return;
       if (quote.discounted) {
         showPrice(quote.amount, quote.price);
@@ -231,7 +232,7 @@ $('checkout-form').addEventListener('submit', async (event) => {
   $('pay').disabled = true;
   $('pay').textContent = 'Einen Moment …';
   try {
-    const { url } = await api('/api/checkout', {
+    const { url } = await api('api/checkout', {
       product: id,
       text,
       entryId: checkout.entryId,
@@ -287,7 +288,7 @@ const cancelled = new URLSearchParams(location.search).get('abgebrochen');
 if (cancelled) {
   history.replaceState(null, '', location.pathname);
   showToast('Bezahlung abgebrochen – es wurde nichts berechnet.');
-  api(`/api/orders/${encodeURIComponent(cancelled)}/cancel`, {}).catch(() => {}).finally(load);
+  api(`api/orders/${encodeURIComponent(cancelled)}/cancel`, {}).catch(() => {}).finally(load);
 } else {
   load();
 }

@@ -3,7 +3,7 @@ import { api, el, renderStory } from './story.js';
 const container = document.getElementById('volumes');
 
 try {
-  const volumes = await api('/api/archive');
+  const volumes = await api('api/archive');
   if (!volumes.length) {
     container.append(el('p', 'card', 'Noch ist kein Band zu Ende geschrieben. Das Ende kann man auf der Startseite kaufen.'));
   }

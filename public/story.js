@@ -14,7 +14,15 @@ export function el(tag, className, text) {
   return node;
 }
 
+// Auf GitHub Pages gibt es keinen Server: Dort beantwortet eine Browser-Vorschau die Anfragen.
+const staticPreview = document.documentElement.dataset.backend === 'static';
+let preview;
+
 export async function api(url, body) {
+  if (staticPreview) {
+    preview ??= await import('./demo-backend.js');
+    return preview.handle(url, body);
+  }
   const options = body
     ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }
     : {};
