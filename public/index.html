@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Die unendliche Geschichte</title>
+  <meta name="description" content="Eine Geschichte, die alle gemeinsam schreiben – Satz für Satz. Ein Satz kostet 1 €.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <div class="demo-banner" id="demo-banner" hidden>Demo-Modus – es wird kein echtes Geld berechnet.</div>
+
+  <header class="masthead">
+    <a class="brand" href="/">Die unendliche Geschichte</a>
+    <nav><a href="/archiv">Archiv</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="volume" id="volume">Band 1</p>
+      <h1 class="title" id="title">&nbsp;</h1>
+      <button type="button" class="pill" id="title-cta" data-buy="title" hidden>Sei der Erste und bestimme den Titel – 5 €</button>
+      <p class="stats" id="stats"></p>
+    </section>
+
+    <section class="fame" aria-labelledby="fame-heading">
+      <h2 id="fame-heading">Auf der Startseite verewigt</h2>
+      <ul class="names" id="names"></ul>
+      <button type="button" class="link-button" data-buy="name">Deinen Namen hier veröffentlichen – 12 €</button>
+    </section>
+
+    <div class="layout">
+      <article class="book" aria-label="Die Geschichte">
+        <div class="delete-hint" id="delete-hint" hidden>
+          <span>Klick auf den Satz, den du löschen möchtest.</span>
+          <button type="button" class="link-button" id="delete-cancel">Abbrechen</button>
+        </div>
+        <div class="story" id="story" aria-live="polite"></div>
+      </article>
+
+      <aside class="shop" aria-labelledby="shop-heading">
+        <h2 id="shop-heading">Mitschreiben</h2>
+        <ul class="products" id="products"></ul>
+        <p class="discount-note">Nach jedem Kauf bekommst du einen Rabattcode für −30&nbsp;% auf deinen nächsten Kauf.</p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <a href="/impressum">Impressum</a> · <a href="/impressum#agb">AGB &amp; Widerruf</a> · <a href="/impressum#datenschutz">Datenschutz</a>
+  </footer>
+
+  <dialog class="checkout" id="checkout" aria-labelledby="checkout-title">
+    <form id="checkout-form" novalidate>
+      <div class="checkout-head">
+        <h2 id="checkout-title"></h2>
+        <button type="button" class="close" id="checkout-close" aria-label="Schließen">×</button>
+      </div>
+      <p class="muted" id="checkout-desc"></p>
+
+      <blockquote class="target" id="checkout-target" hidden></blockquote>
+
+      <label class="field" id="text-field">
+        <span class="field-label"><span id="text-label"></span><span class="counter" id="counter"></span></span>
+        <input type="text" id="text-line" autocomplete="off">
+        <textarea id="text-area"></textarea>
+      </label>
+
+      <label class="field">
+        <span class="field-label"><span>Rabattcode <span class="muted">(optional)</span></span></span>
+        <input type="text" id="code" inputmode="numeric" autocomplete="off">
+        <span class="code-status" id="code-status" aria-live="polite"></span>
+      </label>
+
+      <label class="agree">
+        <input type="checkbox" id="agree">
+        <span>Ich möchte, dass mein Kauf sofort ausgeführt wird, und weiß, dass ich dadurch mein Widerrufsrecht verliere. Es gelten die <a href="/impressum#agb" target="_blank">AGB</a>.</span>
+      </label>
+
+      <p class="error" id="checkout-error" role="alert" hidden></p>
+
+      <div class="checkout-foot">
+        <p class="price"><s id="price-old" hidden></s> <strong id="price"></strong></p>
+        <button type="submit" class="primary" id="pay">Zahlungspflichtig bestellen</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>

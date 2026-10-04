@@ -1,0 +1,23 @@
+{
+  "name": "die-unendliche-geschichte",
+  "version": "1.0.0",
+  "description": "Eine Geschichte, die alle gemeinsam schreiben – Satz für Satz, gegen Bezahlung.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/levithomas15/Die-Geschichte-unendliche-Geschichte-.git"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.2.1",
+    "stripe": "^23.0.0"
+  }
+}

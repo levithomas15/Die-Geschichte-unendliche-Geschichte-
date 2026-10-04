@@ -1,0 +1,54 @@
+.admin {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  font-family: var(--sans);
+}
+
+.admin h2 {
+  font-size: 1.2rem;
+  margin: 32px 0 10px;
+}
+
+.admin table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.admin th,
+.admin td {
+  text-align: left;
+  vertical-align: top;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.admin td.text {
+  font-family: var(--serif);
+  font-size: 1rem;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  width: 60%;
+}
+
+.admin td.nowrap {
+  white-space: nowrap;
+}
+
+.admin button {
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background: transparent;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
+}
+
+.admin button:hover {
+  background: var(--danger);
+  color: var(--paper);
+}
